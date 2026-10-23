@@ -1,0 +1,4 @@
+ELEC 475 - Lab 2 code repository
+Michael Moser, 20349246
+
+GitHub repository: https://github.com/MichaelMoser25/ELEC-475-Lab2

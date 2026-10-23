@@ -1,0 +1,4 @@
+Run,Final train acc % (logged),Final train acc % (clean),Final val acc %,Gap (logged),Gap (clean),Final macro F1 %,Best val acc % (epoch),Macro F1 % @ best,Gap (clean) @ best,Final val loss,Min val loss (epoch),Final train loss,Mean s/epoch,Total min
+No augmentation,90.51,90.87,80.55,9.96,10.32,80.68,80.55 (15),80.68,10.32,0.6586,0.6145 (11),0.2838,78.7,23.9
+With augmentation,84.63,82.60,78.40,6.23,4.20,77.85,81.11 (13),81.28,4.69,0.6212,0.5577 (13),0.4661,80.2,24.4
+Change (with - without),-5.88,-8.27,-2.15,-3.73,-6.12,-2.82,+0.56,+0.60,-5.63,-0.0373,-0.0567,+0.1823,+1.5,+0.5

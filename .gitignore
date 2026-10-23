@@ -1,0 +1,14 @@
+# Large or machine-specific files (not part of the submission)
+.venv/
+data/
+cifar-100-python.tar
+__pycache__/
+*.pyc
+.DS_Store
+~$*
+
+# Keep only the three required checkpoints (others are up to 228 MB; GitHub's limit is 100 MB)
+checkpoints/*
+!checkpoints/lenet_baseline.pth
+!checkpoints/lenet_modern.pth
+!checkpoints/alexnet_bn.pth

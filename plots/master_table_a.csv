@@ -1,0 +1,8 @@
+Model Architecture,Conv Depth,Normalization & Regularization,Data Augmentation,Trainable Params (M),FLOPs (MFLOPs),"Mean Epoch Time (s), CIFAR-10 / Tiny ImageNet","Inference Latency (ms), MPS batch 1"
+1. Base LeNet-5,2,None,None,0.338,7.17,34.2 / 43.7,0.58
+2. Modernized LeNet,2,None (ReLU + overlapping MaxPool),None,0.446,9.19,36.5 / 45.4,0.55
+3. AlexNet (No Norm),5,Dropout (p = 0.5),None,6.609,436.70,71.6 / 116.5,1.33
+4. AlexNet + LRN,5,LRN + Dropout (p = 0.5),None,6.609,436.70,208.8 / 377.3,2.19
+5. AlexNet + BatchNorm,5,BatchNorm2d + Dropout (p = 0.5),None,6.611,437.97,76.8 / 126.6,3.91
+6. AlexNet + BN + Aug,5,BatchNorm2d + Dropout (p = 0.5),Pure PyTorch Aug,6.611,437.97,80.0 / 129.0,3.91
+7. PyTorch Zoo AlexNet,5,PyTorch Zoo (AdaptiveAvgPool2d) + Dropout (p = 0.5),None,57.045,188.20,74.8 / 140.8,3.41

@@ -1,0 +1,67 @@
+ELEC 475 - Lab 2: exact commands used for every result in the report
+Run from the lab2_template folder with the project environment active:
+    source .venv/bin/activate
+Hardware: Apple M2 (PyTorch MPS GPU backend). All runs: batch 128, Adam lr 1e-3, weight decay 1e-4, seed 42.
+
+# ---------------------------------------------------------------------------
+# Pre-lab: environment check, dataset EDA, transform diagnostic
+# ---------------------------------------------------------------------------
+python prelab_verify.py
+python -m utils.eda --dataset both
+python demo_transforms.py
+
+# ---------------------------------------------------------------------------
+# In-lab milestone (5 epochs)
+# ---------------------------------------------------------------------------
+python train.py --model lenet --dataset cifar10 --epochs 5 --batch-size 128 --seed 42 --save-model checkpoints/lenet_b --plot-file plots/loss_lenet.png
+python train.py --model lenet_modern --dataset cifar10 --epochs 5 --batch-size 128 --seed 42 --save-model checkpoints/lenet_modern --plot-file plots/loss_lenet_modern.png
+
+# ---------------------------------------------------------------------------
+# Step 2: normalization study, AlexNet-64 on CIFAR-10 (10 epochs)
+# ---------------------------------------------------------------------------
+python train.py --model alexnet --norm none --dataset cifar10 --epochs 10 --no-augment --save-model checkpoints/alexnet_none.pth --plot-file plots/loss_alexnet_none.png --history-file logs/alexnet_none.json
+python train.py --model alexnet --norm lrn  --dataset cifar10 --epochs 10 --no-augment --save-model checkpoints/alexnet_lrn.pth  --plot-file plots/loss_alexnet_lrn.png  --history-file logs/alexnet_lrn.json
+python train.py --model alexnet --norm bn   --dataset cifar10 --epochs 10 --no-augment --save-model checkpoints/alexnet_bn.pth   --plot-file plots/loss_alexnet_bn.png   --history-file logs/alexnet_bn.json
+python plot_norm_study.py
+
+# ---------------------------------------------------------------------------
+# Step 3: data augmentation study, AlexNet-64 + BatchNorm on CIFAR-10 (15 epochs)
+# ---------------------------------------------------------------------------
+python train.py --model alexnet --norm bn --dataset cifar10 --epochs 15 --no-augment --save-model checkpoints/alexnet_no_aug.pth --plot-file plots/loss_no_aug.png --history-file logs/alexnet_no_aug.json --clean-train-eval 10000
+python train.py --model alexnet --norm bn --dataset cifar10 --epochs 15 --save-model checkpoints/alexnet_with_aug.pth --plot-file plots/loss_with_aug.png --history-file logs/alexnet_with_aug.json --clean-train-eval 10000
+python plot_aug_study.py
+
+# ---------------------------------------------------------------------------
+# Step 4: Tiny ImageNet-200 (10 epochs, augmentation on)
+# ---------------------------------------------------------------------------
+python train.py --model alexnet --norm bn --dataset tiny_imagenet --epochs 10 --save-model checkpoints/alexnet_tiny_imagenet.pth --plot-file plots/loss_tiny_imagenet.png --history-file logs/alexnet_tiny_imagenet.json --clean-train-eval 10000
+python plot_dataset_study.py
+
+# ---------------------------------------------------------------------------
+# Step 5: remaining master-ablation runs (10 epochs, no augmentation), then tables and plots
+# (run_step5.sh runs exactly these commands)
+# ---------------------------------------------------------------------------
+python train.py --model lenet        --norm none --dataset cifar10       --epochs 10 --no-augment --save-model checkpoints/lenet_cifar10.pth        --plot-file plots/loss_lenet_cifar10.png        --history-file logs/lenet_cifar10.json
+python train.py --model lenet_modern --norm none --dataset cifar10       --epochs 10 --no-augment --save-model checkpoints/lenet_modern_cifar10.pth --plot-file plots/loss_lenet_modern_cifar10.png --history-file logs/lenet_modern_cifar10.json
+python train.py --model zoo_alexnet  --norm none --dataset cifar10       --epochs 10 --no-augment --save-model checkpoints/zoo_alexnet_cifar10.pth  --plot-file plots/loss_zoo_alexnet_cifar10.png  --history-file logs/zoo_alexnet_cifar10.json
+python train.py --model lenet        --norm none --dataset tiny_imagenet --epochs 10 --no-augment --save-model checkpoints/lenet_tiny.pth           --plot-file plots/loss_lenet_tiny.png           --history-file logs/lenet_tiny.json
+python train.py --model lenet_modern --norm none --dataset tiny_imagenet --epochs 10 --no-augment --save-model checkpoints/lenet_modern_tiny.pth    --plot-file plots/loss_lenet_modern_tiny.png    --history-file logs/lenet_modern_tiny.json
+python train.py --model alexnet      --norm none --dataset tiny_imagenet --epochs 10 --no-augment --save-model checkpoints/alexnet_none_tiny.pth    --plot-file plots/loss_alexnet_none_tiny.png    --history-file logs/alexnet_none_tiny.json
+python train.py --model alexnet      --norm bn   --dataset tiny_imagenet --epochs 10 --no-augment --save-model checkpoints/alexnet_bn_tiny.pth      --plot-file plots/loss_alexnet_bn_tiny.png      --history-file logs/alexnet_bn_tiny.json
+python train.py --model zoo_alexnet  --norm none --dataset tiny_imagenet --epochs 10 --no-augment --save-model checkpoints/zoo_alexnet_tiny.pth     --plot-file plots/loss_zoo_alexnet_tiny.png     --history-file logs/zoo_alexnet_tiny.json
+python train.py --model alexnet      --norm lrn  --dataset tiny_imagenet --epochs 10 --no-augment --save-model checkpoints/alexnet_lrn_tiny.pth     --plot-file plots/loss_alexnet_lrn_tiny.png     --history-file logs/alexnet_lrn_tiny.json
+
+python compare_models.py --dataset cifar10 --device mps --reps 200
+python -m utils.visualization --plot-ablation
+python make_master_tables.py
+python plot_training_grid.py
+
+# ---------------------------------------------------------------------------
+# Submission files with the names the handout requires (copies of the runs above)
+# ---------------------------------------------------------------------------
+cp checkpoints/lenet_cifar10.pth checkpoints/lenet_baseline.pth
+cp checkpoints/lenet_modern_cifar10.pth checkpoints/lenet_modern.pth
+cp plots/ablation_summary_cifar10.png plots/ablation_summary.png
+
+# Evaluate a saved checkpoint (accuracy, macro/micro/weighted F1, per-class report)
+python evaluate.py --checkpoint checkpoints/alexnet_bn.pth --model alexnet --norm bn --dataset cifar10

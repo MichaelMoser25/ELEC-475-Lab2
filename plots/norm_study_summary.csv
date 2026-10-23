@@ -1,0 +1,4 @@
+Variant,Best val acc % (epoch),Macro F1 % @ best,Final val acc %,Final macro F1 %,Final train loss,Train-val acc gap (final),Batch-loss noise (std),Val-loss increases,Mean s/epoch,Time vs none,MFLOPs/img,Params,Total min
+A: No norm,74.30 (10),73.85,74.30,73.85,0.6957,1.66,0.0952,1 of 9,71.6,x1.00,436.70,"6,608,842",11.9
+B: LRN (2012),74.27 (10),74.30,74.27,74.30,0.6661,2.65,0.0942,1 of 9,208.8,x2.92,436.70,"6,608,842",34.8
+C: BatchNorm2d,79.19 (9),79.01,75.68,76.70,0.4459,9.72,0.0932,4 of 9,76.8,x1.07,437.97,"6,611,402",12.8
